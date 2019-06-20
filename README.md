@@ -102,5 +102,46 @@ int main()
 	return 0;
 }
 ```
+```
+#include <stdio.h>
+#include <stdlib.h>
 
+
+struct MyStruct
+{
+	int a;
+	int b;
+};
+
+typedef struct MyStruct2
+{
+	int a;
+	int b;
+}TMP;
+
+
+int main()
+{
+
+	struct MyStruct m1;// 定义结构体变量，一定要加上struct关键字
+	TMP m2; //typedef和结构体结合使用，定义结构体变量更简单
+
+	system("pause");
+	return 0;
+}
+```
 4 void类型  
+函数参数为空，定义函数时，可以用void修饰：int fun(void)在c语言中写上比较好，在c++中写不写无所谓  
+函数没有返回值时，用void修饰：void fun(void)  
+不能定义void类型的普通变量：void a,因为无法确定类型，则无法确定分配空间
+可以定义void类型的指针变量：
+```
+void *p; // 万能指针，很常用，通常作为函数返回值和函数参数，很灵活
+``` 
+## 内存四区
+主要掌握堆区，栈区，全局区，要会画内存四区图  
+堆区heap：程序员手动分配和释放空间（new与delete，malloc与free）  
+栈区stack：临时区，函数体中  
+全局区global：文字常量，全局变量，静态变量  
+代码区code：操作系统管理  
+1 全局区分析  
