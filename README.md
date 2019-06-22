@@ -141,7 +141,7 @@ void *p; // 万能指针，很常用，通常作为函数返回值和函数参�
 ## 内存四区
 主要掌握堆区，栈区，全局区，要会画内存四区图  
 堆区heap：程序员手动分配和释放空间（new与delete，malloc与free）  
-栈区stack：临时区，函数体中  
+栈区stack：临时区，函数体中的变量  
 全局区global：文字常量，全局变量，静态变量  
 代码区code：操作系统管理  
 1 全局区分析  
@@ -185,10 +185,78 @@ p=abcd, p=10835772
 q=abcd, q=10835772
 ```
 思考：为什么pq的字符串一致时，地址也一样？  
-![看图](1.jpg)  
+![看图](2.png)  
 2 栈区分析  
+如下代码，分别使用方式1和方式2输出全局区文字常量“abcdefg”  
+采用方式1可能输出“abcdefg”也可能输出乱码（这取决于解释器对strcpy是先赋值再释放还是先释放）  
+采用方式2指针的方式进行输出，结果是乱码的  
+```
+char *get_str()
+{
 
+	char str[] = "abcdefg";
+	return str;
+}
 
+int main(void)
+{
+	char buf[128] = { 0 };
+
+	//方式1：使用strcpy进行拷贝
+	//strcpy(buf, get_str()); //获取字符串拷贝到buf
+	//printf("buf=%s\n,buf");
+
+	//方式2：使用指针
+	char *p = NULL;
+	p = get_str();
+	printf("p=%s\n,p");
+
+	system("pause");
+	return 0;
+}
+```
+![看图](3.png)  
+3 堆区分析  
+```
+char *get_str2()
+{
+	char *tmp = (char *)malloc(100);
+	if (tmp == NULL)
+	{
+		return NULL;
+	}
+	strcpy(tmp, "abcd");
+	return tmp;
+}
+
+int main(void)
+{
+	char *p = NULL;
+	p = get_str2();
+	if (p != NULL)
+	{
+		printf("p=%s\n,p");
+		free(p);
+		p = NULL;//将指针p重新赋值为NULL
+	}
+	system("pause");
+	return 0;
+}
+```
+![看图](4.png)  
+注意：对malloc空间free，不是说这块空间没有值了，而是告诉系统，这块空间可以使用了，而指针也依然指向这块区域(p不为空），因此以防万一，将指针p重新赋值为NULL，如果对程序进行以下修改则出错（初学者常犯错误）  
+```
+	if (p != NULL)
+	{
+		printf("p=%s\n,p");
+		free(p);
+		//p = NULL;
+		if (p != NULL)
+		{
+		    free(p);
+		}
+	}
+```
 
 
 
